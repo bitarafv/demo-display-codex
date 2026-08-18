@@ -26,6 +26,9 @@ Open [http://localhost:3000](http://localhost:3000).
 - Dynamic pages under `src/app/industries/[industrySlug]` and `src/app/demos/[demoSlug]` render the catalog without per-demo route files.
 - `src/components/mock-app.tsx` composes reusable copilot, document, vision, research, workflow, developer, and analytics-style simulations.
 - `src/components/app-provider.tsx` persists theme and the selected Nano or Fury platform in local storage.
+- `src/features/simulations` defines the isolated module contract, shared simulation primitives, integration-owned registry, and fallback renderer used for parallel demo development.
+
+See [docs/parallel-simulation-workflow.md](docs/parallel-simulation-workflow.md) before starting concurrent Codex tasks. Each task must use a separate Git worktree and own one simulation directory.
 
 ## Extending the catalog
 

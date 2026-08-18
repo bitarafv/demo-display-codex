@@ -1,9 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Check, Cpu, Network } from "lucide-react";
+import { Check, Cpu, Network } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { useApp } from "@/components/app-provider";
 import type { Platform } from "@/lib/types";
 
@@ -14,9 +13,8 @@ const platforms = [
 
 export default function Home() {
   const { selection, setSelection } = useApp();
-  const [platform, setPlatform] = useState<Platform>(selection?.platform ?? "nano");
   const router = useRouter();
-  const proceed = () => { setSelection({ platform }); router.push("/markets"); };
+  const selectPlatform = (platform: Platform) => { setSelection({ platform }); router.push("/markets"); };
   return <>
     <section className="shell relative overflow-hidden pb-8 pt-10 text-center lg:pt-14">
       <div className="grid-lines absolute inset-x-0 top-0 -z-10 h-full opacity-40"/>
@@ -29,18 +27,13 @@ export default function Home() {
 
     <section className="shell">
       <div className="grid gap-4 lg:grid-cols-2">
-        {platforms.map((item, index) => <motion.button key={item.id} initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .1 + index * .07 }} onClick={() => setPlatform(item.id)} className={`panel relative overflow-hidden rounded-2xl p-5 text-left transition ${platform === item.id ? "border-blue-500 ring-2 ring-blue-500/20" : "hover:-translate-y-1"}`}>
+        {platforms.map((item, index) => <motion.button key={item.id} initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .1 + index * .07 }} onClick={() => selectPlatform(item.id)} className={`panel relative overflow-hidden rounded-2xl p-5 text-left transition ${selection?.platform === item.id ? "border-blue-500 ring-2 ring-blue-500/20" : "hover:-translate-y-1"}`}>
           <div className="absolute -right-14 -top-14 size-48 rounded-full bg-blue-500/10 blur-3xl"/>
-          <div className="flex items-start justify-between"><span className="grid size-10 place-items-center rounded-xl bg-blue-500/10 text-blue-500"><item.icon size={20}/></span>{platform === item.id && <span className="grid size-7 place-items-center rounded-full bg-blue-600 text-white"><Check size={15}/></span>}</div>
+          <div className="flex items-start justify-between"><span className="grid size-10 place-items-center rounded-xl bg-blue-500/10 text-blue-500"><item.icon size={20}/></span>{selection?.platform === item.id && <span className="grid size-7 place-items-center rounded-full bg-blue-600 text-white"><Check size={15}/></span>}</div>
           <p className="mt-5 text-xs font-bold text-blue-500">{item.subtitle}</p>
           <h2 className="mt-1.5 text-2xl font-black tracking-tight">{item.label}</h2>
           <p className="muted mt-2.5 max-w-lg text-sm leading-6">{item.detail}</p>
         </motion.button>)}
-      </div>
-
-      <div className="mt-4 flex flex-col items-start justify-between gap-4 rounded-xl border border-[var(--line)] px-4 py-3 sm:flex-row sm:items-center">
-        <div><p className="muted text-[10px] font-bold uppercase tracking-widest">Selected platform</p><p className="mt-1 font-black">ZGX {platform === "nano" ? "Nano" : "Fury"}</p></div>
-        <button onClick={proceed} className="flex items-center gap-3 rounded-lg bg-blue-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-500">Explore solutions <ArrowRight size={17}/></button>
       </div>
     </section>
   </>;
