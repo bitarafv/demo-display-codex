@@ -1,4 +1,5 @@
 import clinicalScribeModule from "./clinical-scribe";
+import radiologyAssistantModule from "./radiology-assistant";
 import type { SimulationModule } from "./contracts";
 import { requiredSimulationStates } from "./contracts";
 
@@ -6,6 +7,7 @@ import { requiredSimulationStates } from "./contracts";
 // the integrator adds static imports here after review so Next.js can prerender them.
 export const simulationModules: SimulationModule[] = [
   clinicalScribeModule,
+  radiologyAssistantModule,
 ];
 
 export function getSimulationModule(slug: string) {
