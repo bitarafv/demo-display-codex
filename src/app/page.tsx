@@ -14,7 +14,7 @@ const platforms = [
 export default function Home() {
   const { selection, setSelection } = useApp();
   const router = useRouter();
-  const selectPlatform = (platform: Platform) => { setSelection({ platform }); router.push("/markets"); };
+  const selectPlatform = (platform: Platform) => { setSelection({ platform }); router.push(`/${platform}/markets`); };
   return <>
     <section className="shell relative overflow-hidden pb-8 pt-10 text-center lg:pt-14">
       <div className="grid-lines absolute inset-x-0 top-0 -z-10 h-full opacity-40"/>

@@ -153,6 +153,17 @@ const landscapes: Record<string, CompetitiveLandscape> = {
 
 const landscapeKeyByDemo: Record<string, keyof typeof landscapes> = {
   "clinical-scribe": "clinical", "radiology-assistant": "radiology", "risk-analyst-copilot": "risk", "claims-assistant": "claims", "defect-detection": "vision", "engineering-copilot": "engineering", "ai-developer-workspace": "developer", "ai-lab": "developer", "intelligence-analyst": "intelligence", "citizen-services-assistant": "government", "permit-review-assistant": "permits", "research-assistant": "academic", "teacher-assistant": "education", "student-learning-assistant": "education",
+  "clinical-scribe-operations": "clinical", "radiology-operations-command-center": "radiology", "risk-intelligence-center": "risk", "claims-operations-center": "claims", "multi-line-vision-operations": "vision", "engineering-digital-twin-copilot": "engineering", "ai-model-factory": "developer", "departmental-knowledge-platform": "enterprise", "multi-agent-operations-center": "enterprise", "enterprise-research-center": "enterprise", "intelligence-exploitation-center": "intelligence", "mission-planning-copilot": "intelligence",
+};
+
+const furyModelExamples: Record<Archetype, WorkloadStack["models"]> = {
+  copilot: [{ name: "Qwen3-235B-A22B", category: "Large language model", sizing: "NVFP4 deployment example; runtime and context must be benchmarked", role: "Larger-model reasoning with departmental serving headroom" }],
+  documents: [{ name: "Large VLM + specialist OCR pipeline", category: "Concurrent multimodal stack", sizing: "Multiple resident services; validate HBM placement and coherent-memory spill", role: "Mixed-media extraction and evidence correlation" }],
+  vision: [{ name: "Parallel detector and VLM services", category: "Multi-model vision", sizing: "Several optimized models with batched streams", role: "Concurrent inspection, segmentation, and visual reasoning" }],
+  research: [{ name: "Frontier-class reasoning + retrieval stack", category: "Long-context RAG", sizing: "Large quantized model with reranker and substantial KV-cache budget", role: "Concurrent evidence synthesis over large private corpora" }],
+  workflow: [{ name: "Nemotron / Llama agent pool", category: "Multi-agent models", sizing: "Multiple resident planners and specialist workers", role: "Parallel planning, tool use, policy review, and synthesis" }],
+  developer: [{ name: "100B+ model development target", category: "Fine-tuning and evaluation", sizing: "Workload-specific precision, optimizer, adapter, and checkpoint budgets", role: "Departmental model experimentation and production preparation" }],
+  analytics: [{ name: "Large reasoning model + analytical services", category: "Concurrent analytics", sizing: "Quantized large-model starting point with portfolio working sets", role: "Scenario reasoning across multiple analyst workspaces" }],
 };
 
 export function getCompetitiveLandscape(demoSlug: string, archetype: Archetype): CompetitiveLandscape {
@@ -161,3 +172,4 @@ export function getCompetitiveLandscape(demoSlug: string, archetype: Archetype):
 }
 
 export function getWorkloadStack(archetype: Archetype) { return workloadStacks[archetype]; }
+export function getPlatformModelExamples(archetype: Archetype, platform: Platform) { return platform === "fury" ? [...workloadStacks[archetype].models, ...furyModelExamples[archetype]] : workloadStacks[archetype].models; }

@@ -3,6 +3,7 @@ import { competitive, discussion, workload } from "./content";
 import { RiskAnalystSimulation } from "./simulation";
 
 const riskAnalystCopilot: SimulationModule = {
+  platform: "nano",
   slug: "risk-analyst-copilot",
   name: "Risk Analyst Copilot",
   industrySlug: "financial-services",

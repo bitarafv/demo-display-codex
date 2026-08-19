@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { industries } from "@/data/catalog";
+import { industries, platformIndustries } from "@/data/catalog";
+import { furyExperienceConfigs } from "@/features/simulations/fury-experiences/config";
 import { getCompetitiveLandscape, getWorkloadStack, hardwareProfiles } from "@/data/technology";
 
 describe("customer-facing configuration", () => {
@@ -30,6 +31,22 @@ describe("customer-facing configuration", () => {
       expect(demo.questions.length).toBeGreaterThan(0);
       expect(demo.painPoints.length).toBeGreaterThan(0);
       expect(demo.objections.length).toBeGreaterThan(0);
+    }
+  });
+
+  it("gives every platform demo an explicit platform identity", () => {
+    for (const platform of ["nano", "fury"] as const) {
+      for (const demo of platformIndustries[platform].flatMap((industry) => industry.demos)) {
+        expect(demo.platforms).toEqual([platform]);
+        expect(demo.experienceScope?.[platform]).toBeTruthy();
+      }
+    }
+  });
+
+  it("provides a configured departmental workflow for every Fury demo", () => {
+    for (const demo of platformIndustries.fury.flatMap((industry) => industry.demos)) {
+      expect(furyExperienceConfigs[demo.slug]?.services.length).toBeGreaterThanOrEqual(4);
+      expect(furyExperienceConfigs[demo.slug]?.queue.length).toBeGreaterThanOrEqual(3);
     }
   });
 });

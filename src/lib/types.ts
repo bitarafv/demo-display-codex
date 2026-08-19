@@ -25,6 +25,8 @@ export interface Demo {
   questions: string[];
   painPoints: string[];
   objections: { objection: string; response: string }[];
+  platforms: Platform[];
+  experienceScope?: Partial<Record<Platform, string>>;
 }
 
 export interface Industry {

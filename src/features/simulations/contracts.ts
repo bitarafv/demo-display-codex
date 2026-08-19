@@ -1,10 +1,11 @@
 import type { ComponentType } from "react";
-import type { CompetitiveLandscape, Demo, DiscussionGuide, WorkloadStack } from "@/lib/types";
+import type { CompetitiveLandscape, Demo, DiscussionGuide, Platform, WorkloadStack } from "@/lib/types";
 
 export type SimulationState = "initial" | "processing" | "success" | "empty" | "error";
 
 export interface SimulationProps {
   demo: Demo;
+  platform: Platform;
 }
 
 export interface SimulationValidation {
@@ -20,6 +21,7 @@ export interface SimulationContent {
 }
 
 export interface SimulationModule {
+  platform: Platform;
   slug: string;
   name: string;
   industrySlug: string;

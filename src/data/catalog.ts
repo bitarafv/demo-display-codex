@@ -1,4 +1,4 @@
-import type { Archetype, Demo, Industry, Market } from "@/lib/types";
+import type { Archetype, Demo, Industry, Market, Platform } from "@/lib/types";
 
 const sharedQuestions = [
   "Where does the relevant data reside today?",
@@ -66,6 +66,21 @@ const defs: Array<[string, string, Archetype, string, string, string]> = [
   ["k12", "Student Learning Assistant", "copilot", "Students need timely, differentiated support without answer substitution.", "Offer guided practice and explanations aligned to learning objectives.", "Conversational AI"],
 ];
 
+const furyOnlyDefs: Array<[string, string, Archetype, string, string, string]> = [
+  ["healthcare", "Clinical Scribe Operations", "workflow", "Health systems need to govern ambient documentation across many clinicians and specialties.", "Coordinate concurrent encounter queues, specialty templates, quality review, and EHR delivery from one local operations workspace.", "Departmental speech AI"],
+  ["healthcare", "Radiology Operations Command Center", "vision", "Imaging services must prioritize and coordinate growing multimodal study volumes.", "Orchestrate concurrent study analysis, triage, segmentation, reporting, and service-line review.", "Departmental multimodal AI"],
+  ["financial-services", "Risk Intelligence Center", "analytics", "Risk teams must synthesize portfolios, regulations, and emerging signals across the institution.", "Run governed, concurrent scenario and evidence workflows for a department of analysts.", "Large-scale risk reasoning"],
+  ["financial-services", "Claims Operations Center", "documents", "Insurers must coordinate high-volume multimodal claims while preserving human accountability.", "Triage documents and images, surface fraud signals, and route decisions through adjuster approval queues.", "Multimodal claims operations"],
+  ["manufacturing", "Multi-Line Vision Operations", "vision", "Plant teams need consistent visibility across multiple production lines and inspection models.", "Monitor parallel camera feeds, correlate anomalies, and coordinate plant-level quality response.", "Multi-stream computer vision"],
+  ["manufacturing", "Engineering & Digital-Twin Copilot", "copilot", "Engineering decisions span large design repositories, simulation results, and specialist reviews.", "Coordinate design evidence, simulation context, and multi-agent engineering review in one workspace.", "Engineering multimodal reasoning"],
+  ["enterprise-ai", "AI Model Factory", "developer", "Enterprise AI teams need a governed path from model experiment to departmental service.", "Compare, fine-tune, evaluate, quantize, and publish large models for multiple development teams.", "Model development lifecycle"],
+  ["enterprise-ai", "Departmental Knowledge Platform", "research", "Departments need trusted answers across large private repositories without losing permissions or provenance.", "Serve concurrent, cited research workflows over governed enterprise knowledge.", "Long-context enterprise RAG"],
+  ["enterprise-ai", "Multi-Agent Operations Center", "workflow", "Complex enterprise work crosses applications, policies, agents, and human approval boundaries.", "Operate multiple specialized agents with scheduling, policy controls, approvals, and complete audit trails.", "Concurrent agentic AI"],
+  ["enterprise-ai", "Enterprise Research Center", "research", "Research teams must synthesize large evidence collections collaboratively and traceably.", "Coordinate multiple research agents, evidence graphs, and analyst workspaces over private corpora.", "Multi-agent research"],
+  ["federal-defense", "Intelligence Exploitation Center", "documents", "Mission teams must exploit large mixed-media collections while maintaining local control.", "Combine OCR, vision-language analysis, entity extraction, evidence graphs, and concurrent analyst review.", "Multimodal document exploitation"],
+  ["federal-defense", "Mission Planning Copilot", "workflow", "Mission planning requires governed comparison of many sources, constraints, and scenarios.", "Run multi-source reasoning and scenario workflows with explicit human approvals in a local environment.", "Governed mission reasoning"],
+];
+
 const slugify = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
 const industryMeta: Array<[string, string, Market, string, string, string]> = [
@@ -79,9 +94,9 @@ const industryMeta: Array<[string, string, Market, string, string, string]> = [
   ["k12", "K–12 Education", "Public Sector", "○", "Give educators practical tools for personalized learning support.", "#ff8ca0"],
 ];
 
-export const industries: Industry[] = industryMeta.map(([slug, name, market, icon, description, accent]) => ({
+function buildIndustries(platform: Platform): Industry[] { return industryMeta.map(([slug, name, market, icon, description, accent]) => ({
   slug, name, market, icon, description, accent,
-  demos: defs.filter(([industry]) => industry === slug).map(([, demoName, archetype, problem, value, workload], index) => ({
+  demos: (platform === "fury" ? furyOnlyDefs : defs).filter(([industry]) => industry === slug).map(([, demoName, archetype, problem, value, workload], index) => ({
     slug: slugify(demoName), name: demoName, industry: name, archetype, problem, value, workload,
     concurrency: index % 3 === 0 ? "Small team" : "Department",
     dataSize: archetype === "vision" || archetype === "research" ? "Large" : "Medium",
@@ -89,9 +104,17 @@ export const industries: Industry[] = industryMeta.map(([slug, name, market, ico
     personas: market === "Commercial" ? ["CIO", "Chief Data Officer", "Operations Leader"] : ["CIO", "Program Leader", "Security Leader"],
     questions: ["Do you have concerns about sending sensitive data to public cloud providers?", "What AI initiatives are currently being explored?", ...sharedQuestions],
     ...profiles[archetype],
+    platforms: [platform],
+    experienceScope: { [platform]: platform === "nano" ? "Focused local workflow for an individual practitioner or developer." : "Departmental production scenario with concurrent workflows, governance, and multiple AI services." },
   })),
-}));
+})); }
+
+export const platformIndustries: Record<Platform, Industry[]> = { nano: buildIndustries("nano"), fury: buildIndustries("fury") };
+export const industries: Industry[] = platformIndustries.nano;
 
 export const getIndustry = (slug: string) => industries.find((item) => item.slug === slug);
 export const getDemo = (slug: string) => industries.flatMap((item) => item.demos).find((item) => item.slug === slug);
+export const getPlatformIndustry = (platform: Platform, slug: string) => platformIndustries[platform].find((item) => item.slug === slug);
+export const getPlatformDemo = (platform: Platform, industrySlug: string, demoSlug: string) => getPlatformIndustry(platform, industrySlug)?.demos.find((item) => item.slug === demoSlug);
+export const isPlatform = (value: string): value is Platform => value === "nano" || value === "fury";
 export const markets: Market[] = ["Commercial", "Public Sector"];

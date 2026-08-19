@@ -6,11 +6,11 @@ import type { Demo } from "@/lib/types";
 const demo: Demo = {
   slug: "clinical-scribe", name: "Clinical Scribe", industry: "Healthcare", archetype: "copilot",
   problem: "Documentation burden", value: "Draft notes", workload: "Speech", concurrency: "Individual", dataSize: "Small",
-  prompts: [], outcomes: [], personas: [], questions: [], painPoints: [], objections: [],
+  prompts: [], outcomes: [], personas: [], questions: [], painPoints: [], objections: [], platforms: ["nano"],
 };
 
 const advance = (milliseconds: number) => act(() => vi.advanceTimersByTime(milliseconds));
-const renderSimulation = () => render(<ClinicalScribeSimulation demo={demo}/>);
+const renderSimulation = () => render(<ClinicalScribeSimulation demo={demo} platform="nano"/>);
 
 describe("ClinicalScribeSimulation", () => {
   beforeEach(() => { vi.useFakeTimers(); Object.assign(navigator, { clipboard: { writeText: vi.fn().mockResolvedValue(undefined) } }); });

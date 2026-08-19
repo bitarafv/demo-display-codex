@@ -3,6 +3,7 @@ import { ClinicalScribeSimulation } from "./simulation";
 import { competitive, discussion, workload } from "./content";
 
 const clinicalScribeModule: SimulationModule = {
+  platform: "nano",
   slug: "clinical-scribe",
   name: "Clinical Scribe",
   industrySlug: "healthcare",

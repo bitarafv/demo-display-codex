@@ -3,6 +3,7 @@ import { radiologyContent } from "./content";
 import { RadiologyAssistantSimulation } from "./simulation";
 
 const radiologyAssistantModule: SimulationModule = {
+  platform: "nano",
   slug: "radiology-assistant",
   name: "Radiology Assistant",
   industrySlug: "healthcare",

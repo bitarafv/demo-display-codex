@@ -14,7 +14,7 @@ describe("Radiology Assistant simulation", () => {
   afterEach(() => { cleanup(); vi.runOnlyPendingTimers(); vi.useRealTimers(); });
 
   it("renders and filters the deterministic worklist with keyboard study selection", () => {
-    render(<RadiologyAssistantSimulation demo={demo}/>);
+    render(<RadiologyAssistantSimulation demo={demo} platform="nano"/>);
     expect(screen.getByText("Chest radiography · 3 unread")).toBeInTheDocument();
     fireEvent.change(screen.getByLabelText("Priority"), { target: { value: "STAT" } });
     expect(screen.getByText("Morgan, Avery")).toBeInTheDocument();
@@ -25,7 +25,7 @@ describe("Radiology Assistant simulation", () => {
   });
 
   it("progresses analysis, reprioritizes the urgent case, and supports viewer controls", () => {
-    render(<RadiologyAssistantSimulation demo={demo}/>); open();
+    render(<RadiologyAssistantSimulation demo={demo} platform="nano"/>); open();
     fireEvent.click(screen.getByRole("button", { name: "Start AI analysis" }));
     expect(screen.getByText("Processing synthetic images")).toBeInTheDocument();
     advance(1600);
@@ -48,7 +48,7 @@ describe("Radiology Assistant simulation", () => {
     ["Reject", "No simulated acute cardiopulmonary finding."],
     ["Uncertain", "Indeterminate right upper lung zone opacity."],
   ])("reflects %s disposition in the generated report", (action, expected) => {
-    render(<RadiologyAssistantSimulation demo={demo}/>); open(); analyze();
+    render(<RadiologyAssistantSimulation demo={demo} platform="nano"/>); open(); analyze();
     fireEvent.click(screen.getByRole("button", { name: new RegExp(action, "i") }));
     fireEvent.click(screen.getByRole("button", { name: "Generate structured draft" }));
     const editor = screen.getByLabelText("Draft report editor");
@@ -60,14 +60,14 @@ describe("Radiology Assistant simulation", () => {
   });
 
   it("handles the no-finding case and generates a review draft", () => {
-    render(<RadiologyAssistantSimulation demo={demo}/>); open("Patel, Riley"); analyze();
+    render(<RadiologyAssistantSimulation demo={demo} platform="nano"/>); open("Patel, Riley"); analyze();
     expect(screen.getByText("No suspected finding")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Generate no-finding draft" }));
     expect((screen.getByLabelText("Draft report editor") as HTMLTextAreaElement).value).toContain("No simulated acute cardiopulmonary finding.");
   });
 
   it("recovers from a simulated processing error and fully resets", () => {
-    render(<RadiologyAssistantSimulation demo={demo}/>);
+    render(<RadiologyAssistantSimulation demo={demo} platform="nano"/>);
     fireEvent.click(screen.getByRole("button", { name: "Load recoverable error scenario" })); advance(400); analyze();
     expect(screen.getByText("Simulated processing error")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Retry analysis" })); advance(1600);
