@@ -1,9 +1,12 @@
+import clinicalScribeModule from "./clinical-scribe";
 import type { SimulationModule } from "./contracts";
 import { requiredSimulationStates } from "./contracts";
 
 // Integration-owned registry. Builders export modules from their owned directory;
 // the integrator adds static imports here after review so Next.js can prerender them.
-export const simulationModules: SimulationModule[] = [];
+export const simulationModules: SimulationModule[] = [
+  clinicalScribeModule,
+];
 
 export function getSimulationModule(slug: string) {
   return simulationModules.find((module) => module.slug === slug);
